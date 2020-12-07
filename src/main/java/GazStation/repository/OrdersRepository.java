@@ -1,8 +1,10 @@
 package GazStation.repository;
 
 
+//import GazStation.exceptions.CashNotEnaughException;
 import GazStation.model.Item;
 import GazStation.model.Orders;
+import GazStation.model.OtherProduct;
 import GazStation.model.Product;
 
 import java.sql.*;
@@ -96,6 +98,24 @@ public class OrdersRepository {
         return arr;
     }
 
+    public ArrayList<OtherProduct> getOtherProducts()throws SQLException{
+        ArrayList<OtherProduct> arr = new ArrayList<>();
+        PreparedStatement preparedStatement =
+                getConnection().prepareStatement("select * from otherProducts;");
+
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            int id = resultSet.getInt("id_products");
+            String title = resultSet.getString("title");
+            double cost = resultSet.getDouble("cost");
+            OtherProduct otherProduct = new OtherProduct(id, title, cost);
+            arr.add(otherProduct);
+        }
+        return arr;
+    }
+
 
     public Integer getNumberOrder(int idUser) throws SQLException{
         int numberOrder = 0;
@@ -127,8 +147,8 @@ public class OrdersRepository {
         preparedStatement.executeUpdate();
 
     }
-    public void CashUpdate(Double order_cost,int id_users) throws SQLException {
-        String query = "UPDATE users SET cash = cash-? WHERE id_users=?";
+    public void CashUpdate(Double order_cost,int id_users) throws SQLException{
+           String query = "UPDATE users SET cash = cash-? WHERE id_users=?";
         PreparedStatement preparedStatement =
                 getConnection().prepareStatement(query);
         preparedStatement.setDouble(1, order_cost);

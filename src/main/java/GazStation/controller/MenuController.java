@@ -1,12 +1,13 @@
 package GazStation.controller;
 
 import GazStation.dto.OrdersDto;
+import GazStation.dto.OtherProductDto;
 import GazStation.dto.ProductDto;
 import GazStation.dto.UserDto;
 import GazStation.exceptions.CashNotEnaughException;
 import GazStation.exceptions.ItemNotFoundException;
+import GazStation.model.OtherProduct;
 import GazStation.model.Product;
-import GazStation.model.User;
 import GazStation.repository.OrdersRepository;
 import GazStation.repository.UserRepository;
 import GazStation.service.OrdersService;
@@ -20,12 +21,12 @@ import java.util.ArrayList;
 
 public class MenuController {
     static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
-    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
 
-    private UserService userService = new UserService();
-    private OrdersService ordersService = new OrdersService();
-    private OrdersRepository ordersRepository = new OrdersRepository();
-    private UserRepository userRepository = new UserRepository();
+    private final UserService userService = new UserService();
+    private final OrdersService ordersService = new OrdersService();
+    private final OrdersRepository ordersRepository = new OrdersRepository();
+    private final UserRepository userRepository = new UserRepository();
 
     public void start() {
         String in = "";
@@ -42,7 +43,7 @@ public class MenuController {
                         startCreature();
                         break;
                     case "e":
-                        continue;
+                       break;
                 }
             } catch (ItemNotFoundException | IOException e) {
                 System.err.println("НЕВАЛИДНЫЙ ВВОД ДАННЫХ: " + e.getMessage());
@@ -84,8 +85,8 @@ public class MenuController {
 
 
     private void startCreature() {
-        String inName = "";
-        String inPassword = "";
+        String inName;
+        String inPassword;
         Double inCash;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
@@ -129,12 +130,45 @@ public class MenuController {
                     case "3":
                         GK(id);
                         break;
+                    case "4":
+                        buyOther(id);
+                        break;
                     case "e":
                         break;
                 }
             } catch (ItemNotFoundException | IOException | SQLException e) {
                 System.err.println("НЕВАЛИДНЫЙ ВВОД ДАННЫХ: " + e.getMessage());
             }
+        }
+    }
+
+    private void buyOther(int idUser) {
+        try {
+            System.out.println("-----------------------ДОП.ПОКУПКИ---------------------");
+            ArrayList<OtherProductDto> arr = ordersService.getOtherProducts();
+            int numberOrder = ordersRepository.getNumberOrder(idUser);
+            System.out.println(arr.toString());
+            String in = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (!"e".equals(in)) {
+                System.out.println("ВВЕДИТЕ НОМЕР ТОВАРА И КОЛИЧЕСТВО  ЧЕРЕЗ ПРОБЕЛ, ДЛЯ ЗАВЕРШЕНИЯ ПОКУПОК НАЖМИТЕ 'e'");
+                in = reader.readLine();
+                if (!"e".equals(in)) {
+                    String[] split = in.split(" ");
+                    int idProduct = Integer.parseInt(split[0]);
+                    int quantity = Integer.parseInt(split[1]);
+                    double order_cost = Product.cost * quantity;
+                    ordersRepository.newOrder(numberOrder, idProduct, quantity, order_cost);
+                    ordersRepository.CashUpdate(order_cost, idUser);
+                }
+            }
+
+        } catch (ItemNotFoundException | IOException | CashNotEnaughException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            System.err.println("НЕВАЛИДНЫЙ ВВОД");
+        }catch (SQLException e){
+            System.out.println("НЕДОСТАТОЧНО ДЕНЕГ НА СЧЕТУ");
         }
     }
 
@@ -151,17 +185,18 @@ public class MenuController {
         }
     }
 
-    private  void GK(int idUser) throws SQLException{
+    private void GK(int idUser) throws SQLException{ /// double исправленно на void
         System.out.println("-------------------------\nОСТАТОК ДЕНЕГ НА СЧЕТУ:\n-------------------------");
         Double cash = userRepository.getUserCash(idUser);
         System.out.println(cash);
+       // return Double.valueOf(0);
     }
-    private void newOrder(int idUser) throws SQLException, CashNotEnaughException {
+    private void newOrder(int idUser) throws CashNotEnaughException {
         try {
             System.out.println("-------------------------\nСВОБОДНЫЕ КОЛОНКИ:\n-------------------------");
             ArrayList<ProductDto> arr = ordersService.getProducts();
-            ArrayList<ProductDto> arrNewOrder = new ArrayList<>();
-            OrdersDto newOrder = new OrdersDto();
+           // ArrayList<ProductDto> arrNewOrder = new ArrayList<>();
+          //  OrdersDto newOrder = new OrdersDto();
             System.out.println(arr.toString());
 
 
@@ -177,16 +212,17 @@ public class MenuController {
                     int idProduct = Integer.parseInt(split[0]);
                     int quantity = Integer.parseInt(split[1]);
                     double order_cost = Product.cost * quantity;
-                    ordersRepository.newOrder(numberOrder, idProduct, quantity, order_cost);
-                    ordersRepository.CashUpdate(order_cost, idUser);
+                        ordersRepository.newOrder(numberOrder, idProduct, quantity, order_cost);
+                        ordersRepository.CashUpdate(order_cost, idUser);
                 }
             }
 
-
-        } catch (SQLException | ItemNotFoundException | IOException e) {
+        } catch (ItemNotFoundException | IOException | CashNotEnaughException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
             System.err.println("НЕВАЛИДНЫЙ ВВОД");
+        }catch (SQLException e){
+            System.out.println("НЕДОСТАТОЧНО ДЕНЕГ НА СЧЕТУ");
         }
         }
     }

@@ -1,9 +1,11 @@
 package GazStation.service;
 
+import GazStation.dto.OtherProductDto;
 import GazStation.dto.ProductDto;
 import GazStation.exceptions.ItemNotFoundException;
 import GazStation.dto.OrdersDto;
 import GazStation.model.Orders;
+import GazStation.model.OtherProduct;
 import GazStation.model.Product;
 import GazStation.repository.OrdersRepository;
 
@@ -30,6 +32,21 @@ public class OrdersService {
                 arr) {
 
             arrDto.add(ProductDto.builder()
+                    .id(product.getId())
+                    .title(product.getTitle())
+                    .cost(product.getCost())
+                    .build());
+        }
+        return arrDto;
+    }
+    public ArrayList<OtherProductDto> getOtherProducts ()throws SQLException, ItemNotFoundException{
+
+        ArrayList<OtherProduct> arr = ordersRepository.getOtherProducts();
+        ArrayList<OtherProductDto> arrDto = new ArrayList<>();
+        for (OtherProduct product:
+                arr) {
+
+            arrDto.add(OtherProductDto.builder()
                     .id(product.getId())
                     .title(product.getTitle())
                     .cost(product.getCost())
