@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class MenuController {
     static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
-    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n1.1 ПРЕДЫДУЩИЕ ПОКУПКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\n5. ПРЕДЫДУЩИЕ ПОКУПКИ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
 
     private final UserService userService = new UserService();
     private final OrdersService ordersService = new OrdersService();
@@ -121,9 +121,6 @@ public class MenuController {
                     case "1":
                         orders(id);
                         break;
-                    case "1.1":
-                        otherOrders(id);
-                        break;
                     case "2":
                         newOrder(id);
                         break;
@@ -132,6 +129,9 @@ public class MenuController {
                         break;
                     case "4":
                         buyOther(id);
+                        break;
+                    case "5":
+                        otherOrders(id);
                         break;
                     case "e":
                         break;
@@ -144,7 +144,7 @@ public class MenuController {
 
     private void buyOther(int idUser) {
         try {
-            System.out.println("-----------------------ДОП.ПОКУПКИ---------------------");
+            System.out.println("-----------------------\nДОПОЛНИТЕЛЬНЫЕ ПОКУПКИ\n-----------------------");
             ArrayList<OtherProductDto> arr = ordersService.getOtherProducts();
             int numberOrder = ordersRepository.getNumberOtherOrder(idUser);
             System.out.println(arr.toString());
