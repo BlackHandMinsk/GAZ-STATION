@@ -1,9 +1,6 @@
 package GazStation.controller;
 
-import GazStation.dto.OrdersDto;
-import GazStation.dto.OtherProductDto;
-import GazStation.dto.ProductDto;
-import GazStation.dto.UserDto;
+import GazStation.dto.*;
 import GazStation.exceptions.CashNotEnaughException;
 import GazStation.exceptions.ItemNotFoundException;
 import GazStation.model.OtherProduct;
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 
 public class MenuController {
     static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
-    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+    private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n1.1 ПРЕДЫДУЩИЕ ПОКУПКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
 
     private final UserService userService = new UserService();
     private final OrdersService ordersService = new OrdersService();
@@ -124,6 +121,9 @@ public class MenuController {
                     case "1":
                         orders(id);
                         break;
+                    case "1.1":
+                        otherOrders(id);
+                        break;
                     case "2":
                         newOrder(id);
                         break;
@@ -146,7 +146,7 @@ public class MenuController {
         try {
             System.out.println("-----------------------ДОП.ПОКУПКИ---------------------");
             ArrayList<OtherProductDto> arr = ordersService.getOtherProducts();
-            int numberOrder = ordersRepository.getNumberOrder(idUser);
+            int numberOrder = ordersRepository.getNumberOtherOrder(idUser);
             System.out.println(arr.toString());
             String in = "";
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -157,8 +157,8 @@ public class MenuController {
                     String[] split = in.split(" ");
                     int idProduct = Integer.parseInt(split[0]);
                     int quantity = Integer.parseInt(split[1]);
-                    double order_cost = Product.cost * quantity;
-                    ordersRepository.newOrder(numberOrder, idProduct, quantity, order_cost);
+                    double order_cost = OtherProduct.cost * quantity;
+                    ordersRepository.newOtherOrder(numberOrder, idProduct, quantity, order_cost);
                     ordersRepository.CashUpdate(order_cost, idUser);
                 }
             }
@@ -184,8 +184,19 @@ public class MenuController {
             e.printStackTrace();
         }
     }
+    private void otherOrders(int idUser) {
+        try {
+            System.out.println("-------------------------\nВАШИ ПРЕДЫДУЩИЕ ПОКУПКИ:\n-------------------------");
+            OtherOrdersDto otherOrdersDto = ordersService.getByOtherOrders(idUser);
+            System.out.println(otherOrdersDto.toString());
+        }catch (ItemNotFoundException e) {
+            System.err.println("ПОКУПКИ ОТСУТСТВУЮТ");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void GK(int idUser) throws SQLException{ /// double исправленно на void
+    private void GK(int idUser) throws SQLException{
         System.out.println("-------------------------\nОСТАТОК ДЕНЕГ НА СЧЕТУ:\n-------------------------");
         Double cash = userRepository.getUserCash(idUser);
         System.out.println(cash);
