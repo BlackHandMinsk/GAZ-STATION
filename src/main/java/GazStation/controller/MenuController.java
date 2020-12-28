@@ -5,8 +5,10 @@ import GazStation.exceptions.CashNotEnaughException;
 import GazStation.exceptions.ItemNotFoundException;
 import GazStation.model.OtherProduct;
 import GazStation.model.Product;
+import GazStation.repository.OptionsRepository;
 import GazStation.repository.OrdersRepository;
 import GazStation.repository.UserRepository;
+import GazStation.service.OptionsService;
 import GazStation.service.OrdersService;
 import GazStation.service.UserService;
 
@@ -19,11 +21,22 @@ import java.util.ArrayList;
 public class MenuController {
     static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
     private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\n5. ПРЕДЫДУЩИЕ ПОКУПКИ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+    private static final String OPTIONS_MENU = "------------------------\n1.ДОБАВЛЕНИЕ ТОВАРА\n2.УДАЛЕНИЕ ТОВАРА\n3.ДОБАВЛЕНИЕ ТОВАРОВ ИЗ ФАЙЛА\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+    //    private static final String START_MENU_SOUND
+//    private static final String LEAVE_THE_GAZ_STATION_SOUND
+//    private  static final String USER_MENU_SOUND
+//    private static final String OPTIONS_MENU_SOUND
+    private static final String BUY_OTHER_SOUND = "C:\\Users\\37544\\IdeaProjects\\by.belhard.project\\src\\main\\resources\\kassa.wav";
+//    private static final String FILL_THE_CAR_SOUND
 
     private final UserService userService = new UserService();
     private final OrdersService ordersService = new OrdersService();
     private final OrdersRepository ordersRepository = new OrdersRepository();
     private final UserRepository userRepository = new UserRepository();
+    private final OptionsService optionsService = new OptionsService();
+    private final OptionsRepository optionsRepository = new OptionsRepository();
+
+
 
     public void start() {
         String in = "";
@@ -39,6 +52,9 @@ public class MenuController {
                     case "new":
                         startCreature();
                         break;
+                    case "options":
+                        startOptions();
+                        break;
                     case "e":
                        break;
                 }
@@ -47,6 +63,84 @@ public class MenuController {
             }
         }
 
+    }
+    private  void startOptions(){
+        String in = "";
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (!"e".equals(in)) {
+            try {
+                System.out.println(OPTIONS_MENU);
+                in = reader.readLine();
+                switch (in) {
+                    case "1":
+                      createNewGoods();
+                        break;
+                    case "2":
+                      updateGood();
+                        break;
+                    case "3":
+                     // добавление товара из файла
+                        break;
+                    case "e":
+                        break;
+                }
+            } catch (ItemNotFoundException | IOException e) {
+                System.err.println("НЕВАЛИДНЫЙ ВВОД ДАННЫХ: " + e.getMessage());
+            }
+        }
+
+    }
+
+    private void updateGood() {
+        // String auto = "Autoincrement";
+        String title;
+        Double cost;
+        String in = "";
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (!"e".equals(in)) {
+            try {
+                System.out.println("ВВЕДИТЕ НАЗВАНИЕ ТОВАРА КОТОРЫЙ ВЫ ХОТИТЕ УДАЛИТЬ , ЛИБО 'e' ДЛЯ ВЫХОДЫ В ПРЕДЫДУЩЕЕ МЕНЮ:");
+                title = reader.readLine();
+                if ("e".equals(title)) {
+                    start();
+                } else {
+                   // System.out.println("ВВЕДИТЕ ЦЕНУ");
+                   // cost = Double.valueOf(reader.readLine());
+                    ////////от сюда переделать
+                    OptionsDto optionsDto = optionsService.deleteGood(title);
+                    System.out.println("ТОВАР СОЗДАН");
+                }
+
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void createNewGoods() {
+       // String auto = "Autoincrement";
+        String title;
+        Double cost;
+        String in = "";
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (!"e".equals(in)) {
+            try {
+                System.out.println("ВВЕДИТЕ НАЗВАНИЕ ТОВАРА , ЛИБО 'e' ДЛЯ ВЫХОДЫ В ПРЕДЫДУЩЕЕ МЕНЮ:");
+                title = reader.readLine();
+                if ("e".equals(title)) {
+                    start();
+                } else {
+                    System.out.println("ВВЕДИТЕ ЦЕНУ");
+                    cost = Double.valueOf(reader.readLine());
+                    ////////от сюда переделать
+                    OptionsDto optionsDto = optionsService.newGoods(title, cost);
+                    System.out.println("ТОВАР СОЗДАН");
+                }
+
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void startSession(){
@@ -160,6 +254,7 @@ public class MenuController {
                     double order_cost = OtherProduct.cost * quantity;
                     ordersRepository.newOtherOrder(numberOrder, idProduct, quantity, order_cost);
                     ordersRepository.CashUpdate(order_cost, idUser);
+                    SoundController.playSound(BUY_OTHER_SOUND).join();
                 }
             }
 

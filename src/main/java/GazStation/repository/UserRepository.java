@@ -25,8 +25,9 @@ public class UserRepository {
 
 
     public Double getUserCash(int idUser) throws SQLException {
+        String query = "select cash from users where id_users=?;";
         PreparedStatement preparedStatement =
-                getConnection().prepareStatement("select cash from users where id_users=?;");
+                getConnection().prepareStatement(query);
         preparedStatement.setInt(1, idUser);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (!resultSet.next())
@@ -36,9 +37,9 @@ public class UserRepository {
     }
 
     public User getByUser(String userName) throws SQLException {
-
+        String query = "select * from users where user=?;";
         PreparedStatement preparedStatement =
-                getConnection().prepareStatement("select * from users where user=?;");
+                getConnection().prepareStatement(query);
         preparedStatement.setString(1, userName);
 
         ResultSet resultSet = preparedStatement.executeQuery();

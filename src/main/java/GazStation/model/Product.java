@@ -2,7 +2,6 @@ package GazStation.model;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
