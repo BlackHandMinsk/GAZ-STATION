@@ -5,7 +5,6 @@ import GazStation.exceptions.CashNotEnaughException;
 import GazStation.exceptions.ItemNotFoundException;
 import GazStation.model.OtherProduct;
 import GazStation.model.Product;
-import GazStation.repository.OptionsRepository;
 import GazStation.repository.OrdersRepository;
 import GazStation.repository.UserRepository;
 import GazStation.service.OptionsService;
@@ -19,10 +18,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MenuController {
-    static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
+    private static final String GAZ_STATION_LOGO = "┏━━━┓┏━━━┓┏━━━━┓     ┏━━━┓┏━━━━┓┏━━━┓┏━━━━┓┏━━┓┏━━━┓┏━┓ ┏┓\n┃┏━┓┃┃┏━┓┃┗━━┓━┃     ┃┏━┓┃┃┏┓┏┓┃┃┏━┓┃┃┏┓┏┓┃┗┫┣┛┃┏━┓┃┃┃┗┓┃┃\n┃┃┗┛┃┃┃ ┃┃  ┏┛┏┛     ┃┗━━┓┗┛┃┃┗┛┃┃ ┃┃┗┛┃┃┗┛ ┃┃ ┃┃ ┃┃┃┏┓┗┛┃\n┃┃┏━┓┃┗━┛┃ ┏┛┏┛      ┗━━┓┃  ┃┃  ┃┗━┛┃  ┃┃   ┃┃ ┃┃ ┃┃┃┃┗┓┃┃\n┃┗┻━┃┃┏━┓┃┏┛━┗━┓     ┃┗━┛┃  ┃┃  ┃┏━┓┃  ┃┃  ┏┫┣┓┃┗━┛┃┃┃ ┃┃┃\n┗━━━┛┗┛ ┗┛┗━━━━┛     ┗━━━┛  ┗┛  ┗┛ ┗┛  ┗┛  ┗━━┛┗━━━┛┗┛ ┗━┛";
+    private static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
     private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\n5. ПРЕДЫДУЩИЕ ПОКУПКИ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
-    private static final String OPTIONS_MENU = "------------------------\n1.ДОБАВЛЕНИЕ ТОВАРА\n2.УДАЛЕНИЕ ТОВАРА\n3.ДОБАВЛЕНИЕ ТОВАРОВ ИЗ ФАЙЛА\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
-    //    private static final String START_MENU_SOUND
+    private static final String OPTIONS_MENU = "------------------------\n1.ДОБАВЛЕНИЕ ТОВАРА\n2.ИЗМЕНЕНИ НАЗВАНИЯ ТОВАРА\n3.ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРА\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
+ //   private static final String START_MENU_SOUND = "C:\\Users\\37544\\IdeaProjects\\by.belhard.project\\src\\main\\resources\\startMenuSound.wav";
 //    private static final String LEAVE_THE_GAZ_STATION_SOUND
 //    private  static final String USER_MENU_SOUND
 //    private static final String OPTIONS_MENU_SOUND
@@ -34,13 +34,14 @@ public class MenuController {
     private final OrdersRepository ordersRepository = new OrdersRepository();
     private final UserRepository userRepository = new UserRepository();
     private final OptionsService optionsService = new OptionsService();
-    private final OptionsRepository optionsRepository = new OptionsRepository();
+  //  private final OptionsRepository optionsRepository = new OptionsRepository();
 
 
 
     public void start() {
         String in = "";
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println(GAZ_STATION_LOGO);
         while (!"e".equals(in)) {
             try {
                 System.out.println(START_MENU);
@@ -76,7 +77,7 @@ public class MenuController {
                       createNewGoods();
                         break;
                     case "2":
-                      updateGood();
+                      //updateGood();
                         break;
                     case "3":
                      // добавление товара из файла
@@ -91,36 +92,38 @@ public class MenuController {
 
     }
 
-    private void updateGood() {
-        // String auto = "Autoincrement";
-        String title;
-        Double cost;
-        String in = "";
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        while (!"e".equals(in)) {
-            try {
-                System.out.println("ВВЕДИТЕ НАЗВАНИЕ ТОВАРА КОТОРЫЙ ВЫ ХОТИТЕ УДАЛИТЬ , ЛИБО 'e' ДЛЯ ВЫХОДЫ В ПРЕДЫДУЩЕЕ МЕНЮ:");
-                title = reader.readLine();
-                if ("e".equals(title)) {
-                    start();
-                } else {
-                   // System.out.println("ВВЕДИТЕ ЦЕНУ");
-                   // cost = Double.valueOf(reader.readLine());
-                    ////////от сюда переделать
-                    OptionsDto optionsDto = optionsService.deleteGood(title);
-                    System.out.println("ТОВАР СОЗДАН");
-                }
-
-            } catch (IOException | SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void updateGood() {
+//        // String auto = "Autoincrement";
+//        String title;
+//        String newTitle;
+//      //  Double cost;
+//        String in = "";
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//        while (!"e".equals(in)) {
+//            try {
+//                ArrayList<OtherProductDto> arr = ordersService.getOtherProducts();
+//                System.out.println(arr.toString());
+//                System.out.println("ВВЕДИТЕ НАЗВАНИЕ ТОВАРА КОТОРЫЙ ВЫ ХОТИТЕ УДАЛИТЬ , ЛИБО 'e' ДЛЯ ВЫХОДЫ В ПРЕДЫДУЩЕЕ МЕНЮ:");
+//                title = reader.readLine();
+//                if ("e".equals(title)) {
+//                    start();
+//                } else {
+//                  System.out.println("ВВЕДИТЕ НОВОЕ НАЗВАНИЕ");
+//                  newTitle = reader.readLine();
+//                    OptionsDto optionsDto = optionsService.updateGood(title,newTitle);
+//                    System.out.println("НАЗВАНИЕ ИЗМЕНЕНО");
+//                }
+//
+//            } catch (IOException | SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     private void createNewGoods() {
        // String auto = "Autoincrement";
         String title;
-        Double cost;
+        double cost;
         String in = "";
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         while (!"e".equals(in)) {
@@ -131,7 +134,7 @@ public class MenuController {
                     start();
                 } else {
                     System.out.println("ВВЕДИТЕ ЦЕНУ");
-                    cost = Double.valueOf(reader.readLine());
+                    cost = Double.parseDouble(reader.readLine());
                     ////////от сюда переделать
                     OptionsDto optionsDto = optionsService.newGoods(title, cost);
                     System.out.println("ТОВАР СОЗДАН");
@@ -178,7 +181,7 @@ public class MenuController {
     private void startCreature() {
         String inName;
         String inPassword;
-        Double inCash;
+        double inCash;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
             System.out.println("ВЫ ПОПАЛИ В СЕКРЕТНОЕ МЕНЮ СОЗДАНИЯ ПЕРСОНАЖА, ПОЛЬЗУЙТЕСЬ");

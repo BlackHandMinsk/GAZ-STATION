@@ -27,9 +27,9 @@ public class OptionsService {
                 .build();
     }
 
-    public OptionsDto updateGood(String title,Double cost) throws SQLException, ItemNotFoundException {
+    public OptionsDto updateGood(String title,String newTitle) throws SQLException, ItemNotFoundException {
 
-        Options options = optionsRepository.updateGood(title,cost);
+        Options options = optionsRepository.updateGood(title,newTitle);
 
         return OptionsDto.builder()
                 .id(options.getId())

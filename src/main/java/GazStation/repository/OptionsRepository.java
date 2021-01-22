@@ -8,7 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.sql.*;
 
 public class OptionsRepository {
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/belhard24?serverTimezone=UTC";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/graduateWork?serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
@@ -33,14 +33,14 @@ public class OptionsRepository {
         preparedStatement.executeUpdate();
        return getByNewGoods(title);
     }
-    public Options updateGood(String title,Double cost) throws SQLException {
-        String query = "UPDATE otherProducts SET title = ? WHERE Manufacturer = 'Samsung';";
+    public Options updateGood(String title,String newTitle) throws SQLException {
+        String query = "UPDATE otherProducts SET title = ? WHERE title = ?;";
         PreparedStatement preparedStatement =
                 getConnection().prepareStatement(query);
-        preparedStatement.setString(1, title);
+        preparedStatement.setString(1, newTitle);
         preparedStatement.setString(2, title);
         preparedStatement.executeUpdate();
-        return getByNewGoods(title);
+        return getByNewGoods(newTitle);
     }
 
 

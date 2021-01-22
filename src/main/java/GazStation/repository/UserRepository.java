@@ -6,7 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.*;
 public class UserRepository {
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/belhard24?serverTimezone=UTC";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/graduateWork?serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 

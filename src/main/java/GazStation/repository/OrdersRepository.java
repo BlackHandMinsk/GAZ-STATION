@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 public class OrdersRepository {
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/belhard24?serverTimezone=UTC";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/graduateWork?serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
