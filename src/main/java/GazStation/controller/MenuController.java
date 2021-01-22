@@ -22,11 +22,11 @@ public class MenuController {
     private static final String  START_MENU =  "-------------------------\n1. ВСТАВИТЬ КАРТУ\ne. УЕХАТЬ С ЗАПРАВКИ\n-------------------------";
     private static final String  USER_MENU =  "-------------------------\n1. ПРЕДЫДУЩИЕ ЗАПРАВКИ\n2. ЗАПРАВИТЬ МАШИНУ\n3. ОСТАТОК НА СЧЕТУ\n4. КУПИТЬ СОПУТСТВУЮЩИЕ ТОВАРЫ\n5. ПРЕДЫДУЩИЕ ПОКУПКИ\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
     private static final String OPTIONS_MENU = "------------------------\n1.ДОБАВЛЕНИЕ ТОВАРА\n2.ИЗМЕНЕНИ НАЗВАНИЯ ТОВАРА\n3.ИЗМЕНЕНИЕ ЦЕНЫ ТОВАРА\ne. ПРЕДЫДУЩЕЕ МЕНЮ\n-------------------------";
- //   private static final String START_MENU_SOUND = "C:\\Users\\37544\\IdeaProjects\\by.belhard.project\\src\\main\\resources\\startMenuSound.wav";
+ //   private static final String START_MENU_SOUND = "C:\\Users\\37544\\IdeaProjects\\GAZ-STATION\\src\\main\\resources\\startMenuSound.wav";
 //    private static final String LEAVE_THE_GAZ_STATION_SOUND
 //    private  static final String USER_MENU_SOUND
 //    private static final String OPTIONS_MENU_SOUND
-    private static final String BUY_OTHER_SOUND = "C:\\Users\\37544\\IdeaProjects\\by.belhard.project\\src\\main\\resources\\kassa.wav";
+    private static final String BUY_OTHER_SOUND = "C:\\Users\\37544\\IdeaProjects\\GAZ-STATION\\src\\main\\resources\\kassa.wav";
 //    private static final String FILL_THE_CAR_SOUND
 
     private final UserService userService = new UserService();
